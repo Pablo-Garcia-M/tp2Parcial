@@ -3,7 +3,7 @@
     "id": 1,
     "nombre": "Admin Sistema",
     "email": "admin@dds.com",
-    "passwordHash": "$2a$10$9OfN/KeGg2iqSiqmXqAX8OuXUAKusCtkyz/0O.pW48mQ9lPsSd5ai",
+    "passwordHash": "$2a$10$uhXo4neLQamykKAOMZt0Vu9LonmGBXkxkHMZondDcJ38oadrKsnMW",
     "rol": "admin",
     "activo": true
   },
@@ -11,7 +11,7 @@
     "id": 2,
     "nombre": "Marina López",
     "email": "marina@dds.com",
-    "passwordHash": "$2a$10$1R/ZgDTET5rJ.X0Usv21Duy0yGsNKSPiUgbP3TPkmFccQk1S2Aeo6",
+    "passwordHash": "$2a$10$2bYN/AudgQGYPIwbggXMy.Vm8DqUTVvPqlIF/BW4zmGsJNnMv.88q",
     "rol": "tutor",
     "activo": true
   },
@@ -19,7 +19,7 @@
     "id": 3,
     "nombre": "Carlos Gómez",
     "email": "carlos@dds.com",
-    "passwordHash": "$2a$10$iK0uAXU7m6TQPYSXVCu8ZOZYe2RBJ9rukVlJu9TpJEBWByxbR3WTi",
+    "passwordHash": "$2a$10$lHNgmdGz4/5i.IHzwVa9X.u4fNo4f8QLhO35hH1nKQqBN2AMY.NRO",
     "rol": "tutor",
     "activo": true
   },
@@ -27,7 +27,7 @@
     "id": 4,
     "nombre": "Ana Martínez",
     "email": "ana@dds.com",
-    "passwordHash": "$2a$10$zfreYGYagKDgIYFnl86kveukgriq8H2Ssyd//j4h3hCWwfPkE1uei",
+    "passwordHash": "$2a$10$Z3zO3rbJqsjaJRGne152Oe3BCAlZQsZjxGc4mSnMtxbJxyOqOhpyq",
     "rol": "tutor",
     "activo": true
   },
@@ -35,7 +35,7 @@
     "id": 5,
     "nombre": "Diego Fernández",
     "email": "diego@dds.com",
-    "passwordHash": "$2a$10$WQXwQeweuvso9vWDQXRR3erlUr6foj1eVHZRTtqV9qxxfhTZRhiMm",
+    "passwordHash": "$2a$10$JZlAJlKQENjwe.FIlCsqwOlHbqE4e/xIPK/SdsAofYRZISx44Nps6",
     "rol": "tutor",
     "activo": true
   },
@@ -43,7 +43,7 @@
     "id": 6,
     "nombre": "Laura Torres",
     "email": "laura@dds.com",
-    "passwordHash": "$2a$10$e9tPbFUVMT0MEpZrtlYuneFFS6wi0RD3AAs995oBrOHQS.C.JWTUK",
+    "passwordHash": "$2a$10$qmgbM75KWDbAEN6FbUNHReIqXZq9k0.BBMa7fsjslYw9Wx8txHYZa",
     "rol": "tutor",
     "activo": true
   },
@@ -51,7 +51,7 @@
     "id": 7,
     "nombre": "Valen Acosta",
     "email": "valen@dds.com",
-    "passwordHash": "$2a$10$UV3QUXF.x.JjTI1Ks0kqveIPia25oZIne16J2uKd889iVs8uWq9ce",
+    "passwordHash": "$2a$10$ZHmLnhTuguoPZ146eaQyzekY4eCEWKlF3zoJ2rf8XGEgwflycTg76",
     "rol": "estudiante",
     "activo": true
   },
@@ -59,7 +59,7 @@
     "id": 8,
     "nombre": "Tomás Ruiz",
     "email": "tomas@dds.com",
-    "passwordHash": "$2a$10$IpPBf/jpSowh/3lLpFEOkuA2XA12Xyp2vhzSZjsb90bxq7xm22bsG",
+    "passwordHash": "$2a$10$blgsum3lSHz9J0dYsVfctuooebrg542DqMKRk2nS0.rzh4yeFMOZ6",
     "rol": "estudiante",
     "activo": true
   },
@@ -67,8 +67,16 @@
     "id": 9,
     "nombre": "Sofía Pérez",
     "email": "sofia@dds.com",
-    "passwordHash": "$2a$10$oOvggi9j40eI3o8TXw8OJuy9Ix9GpEZrbeHFZ4zAcERhkrnHFiXoa",
+    "passwordHash": "$2a$10$JlzkPCU0fe6s9NSUibewhObS3rFNwDJ45pPANuG.Ak2nm/iaSRk9y",
     "rol": "estudiante",
+    "activo": true
+  },
+  {
+    "id": 10,
+    "nombre": "Pilar Lopez",
+    "email": "pilar@dds.com",
+    "passwordHash": "$2a$10$VpIaywK/tqJDgQWKfa1Bt.t1s5TFoL1pixPbWBL7HNjQkR1wET9Le",
+    "rol": "tutor",
     "activo": true
   }
 ]
