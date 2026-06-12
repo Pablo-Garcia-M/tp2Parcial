@@ -27,7 +27,10 @@ export default function TurnosList() {
   const [filtroFecha, setFiltroFecha] = useState('')
   const [filtroTutor, setFiltroTutor] = useState('')
   const [filtroEspecialidad, setFiltroEspecialidad] = useState('')
-  const [filtroModalidad, setFiltroModalidad] = useState('')
+  const [estadoAplicado, setEstadoAplicado] = useState('')
+  const [fechaAplicada, setFechaAplicada] = useState('')
+  const [tutorAplicado, setTutorAplicado] = useState('')
+  const [especialidadAplicada, setEspecialidadAplicada] = useState('')
   const [pagina, setPagina] = useState(1)
 
   useEffect(() => {
@@ -36,7 +39,8 @@ export default function TurnosList() {
 
   useEffect(() => {
     cargarTurnos()
-  }, [pagina, filtroEstado, filtroFecha, filtroTutor, filtroEspecialidad, filtroModalidad])
+
+  }, [pagina, estadoAplicado, fechaAplicada, tutorAplicado, especialidadAplicada])
 
   async function cargarTutores() {
     try {
@@ -52,11 +56,10 @@ export default function TurnosList() {
     setError('')
     try {
       const filtros = { page: pagina, limit: 10 }
-      if (filtroEstado) filtros.estado = filtroEstado
-      if (filtroFecha) filtros.fecha = filtroFecha
-      if (filtroTutor) filtros.tutorId = filtroTutor
-      if (filtroEspecialidad) filtros.especialidad = filtroEspecialidad
-      if (filtroModalidad) filtros.modalidad = filtroModalidad
+      if (estadoAplicado) filtros.estado = estadoAplicado
+      if (fechaAplicada) filtros.fecha = fechaAplicada
+      if (tutorAplicado) filtros.tutorId = tutorAplicado
+      if (especialidadAplicada) filtros.especialidad = especialidadAplicada
 
       const data = await turnosService.listar(filtros)
       setTurnos(data.data)
@@ -66,6 +69,15 @@ export default function TurnosList() {
     } finally {
       setCargando(false)
     }
+  }
+
+  function handleFiltrar(e) {
+    e.preventDefault()
+    setPagina(1)
+    setEstadoAplicado(filtroEstado)
+    setFechaAplicada(filtroFecha)
+    setTutorAplicado(filtroTutor)
+    setEspecialidadAplicada(filtroEspecialidad)
   }
 
   function handleLimpiar() {
@@ -80,6 +92,10 @@ export default function TurnosList() {
   function cambiarFiltro(setter, value) {
     setter(value)
     setPagina(1)
+    setEstadoAplicado('')
+    setFechaAplicada('')
+    setTutorAplicado('')
+    setEspecialidadAplicada('')
   }
 
   const especialidades = [...new Set(tutores.map(t => t.especialidad).filter(Boolean))].sort()
@@ -144,16 +160,18 @@ export default function TurnosList() {
             style={{ padding: '9px', border: '1px solid #cfd8e3', borderRadius: '4px' }}
           />
         </div>
+        {usuario?.rol !== 'tutor' && (
+          <div>
+            <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '600' }}>Tutor</label>
+            <select value={filtroTutor} onChange={e => setFiltroTutor(e.target.value)} style={{ padding: '9px', border: '1px solid #cfd8e3', borderRadius: '4px', minWidth: '175px' }}>
+              <option value="">Todos</option>
+              {tutores.map(tutor => (
+                <option key={tutor.id} value={tutor.id}>{tutor.nombre}</option>
+              ))}
+            </select>
+          </div>
+        )}
 
-        <div>
-          <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '600' }}>Tutor</label>
-          <select value={filtroTutor} onChange={e => cambiarFiltro(setFiltroTutor, e.target.value)} style={{ padding: '9px', border: '1px solid #cfd8e3', borderRadius: '4px', minWidth: '175px' }}>
-            <option value="">Todos</option>
-            {tutores.map(tutor => (
-              <option key={tutor.id} value={tutor.id}>{tutor.nombre}</option>
-            ))}
-          </select>
-        </div>
 
         <div>
           <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '600' }}>Especialidad</label>

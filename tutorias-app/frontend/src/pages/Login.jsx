@@ -67,6 +67,7 @@ export default function Login() {
             onChange={e => setPassword(e.target.value)}
             required
             style={{ width: '100%', padding: '11px 12px', border: '1px solid #d9e2ec', borderRadius: '6px', boxSizing: 'border-box' }}
+            placeholder="********"
           />
         </div>
 
