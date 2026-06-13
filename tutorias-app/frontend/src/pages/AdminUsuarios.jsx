@@ -12,7 +12,7 @@ function capitalizar(valor = '') {
 }
 
 export default function AdminUsuarios() {
-  const [vista, setVista] = useState('nuevo') // 'nuevo' | 'lista'
+  const [vista, setVista] = useState('nuevo') 
   const [usuarios, setUsuarios] = useState([])
   const [error, setError] = useState('')
   const [exito, setExito] = useState('')

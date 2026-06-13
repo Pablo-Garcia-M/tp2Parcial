@@ -1,26 +1,13 @@
-// turnos.service.js - Lógica de negocio principal del dominio
-//
-// Acá viven las reglas más importantes:
-//   1. Verificar disponibilidad del tutor (activo + día + sin superposición)
-//   2. Máquina de estados: solicitado → confirmado/cancelado → realizado/cancelado
-//   3. Historial de cambios
-
 const db = require('../config/database');
 
 // ── HELPERS ──────────────────────────────────────────────────────────────────
-
-// Mapeo de índice de getDay() a nombre español sin tildes
-// getDay(): 0=domingo, 1=lunes, ..., 6=sábado
 const DIAS_SEMANA = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
 
-// Convierte 'YYYY-MM-DD' al nombre del día en español
-// Parseamos como fecha LOCAL para evitar problemas de zona horaria (UTC vs ART).
 function obtenerDiaSemana(fechaStr) {
   const partes = fechaStr.split('-');
-  // new Date(año, mes-1, día) crea la fecha en hora local, sin offset UTC
   const fecha = new Date(
     parseInt(partes[0]),
-    parseInt(partes[1]) - 1,  // Los meses en JS van de 0 (enero) a 11 (diciembre)
+    parseInt(partes[1]) - 1,
     parseInt(partes[2])
   );
   return DIAS_SEMANA[fecha.getDay()];
@@ -123,16 +110,6 @@ function aplicarTransicionesAutomaticas() {
   }
 }
 
-// Verifica si dos franjas horarias se superponen.
-// Las horas son strings 'HH:MM'. Como tienen formato fijo, la comparación
-// de strings funciona igual que comparación numérica (ej: '09:30' < '10:00' → true).
-//
-// Regla del enunciado: si uno termina EXACTAMENTE cuando el otro empieza, NO hay superposición.
-// Por eso usamos < y > estrictos (no <= ni >=).
-//
-// Ejemplo:
-//   09:00-09:30 vs 09:15-09:45 → '09:00'<'09:45' (true) y '09:30'>'09:15' (true) → SUPERPUESTO
-//   09:00-09:30 vs 09:30-10:00 → '09:00'<'10:00' (true) pero '09:30'>'09:30' (false) → NO SUPERPUESTO
 function haySuperposicion(ini1, fin1, ini2, fin2) {
   return ini1 < fin2 && fin1 > ini2;
 }
@@ -317,8 +294,6 @@ function construirHistorialInferido(turno, usuarios, tutores) {
 }
 
 // Verifica que el tutor pueda recibir un turno en esa fecha y horario.
-// turnoIdIgnorar: cuando EDITAMOS un turno, ignoramos el propio turno
-//                al chequear superposición (no puede conflictuarse consigo mismo).
 function verificarDisponibilidad(tutor, fecha, horaInicio, horaFin, turnoIdIgnorar, estudianteId) {
   aplicarTransicionesAutomaticas();
 
@@ -348,17 +323,13 @@ function verificarDisponibilidad(tutor, fecha, horaInicio, horaFin, turnoIdIgnor
 
   validarFranjaDisponible(tutor, horaInicio, horaFin);
 
-  // 3. No debe haber superposición con turnos activos del mismo tutor o estudiante en esa fecha
-  //    "Activos" = solicitado o confirmado (cancelado y realizado no bloquean)
   const todosLosTurnos = db.findAll('turnos');
 
   for (let i = 0; i < todosLosTurnos.length; i++) {
     const t = todosLosTurnos[i];
 
     if (t.fecha   !== fecha)    continue;
-    // Solo turnos solicitados o confirmados bloquean la agenda
     if (t.estado !== 'solicitado' && t.estado !== 'confirmado') continue;
-    // Al editar, ignoramos el propio turno
     if (turnoIdIgnorar && t.id === turnoIdIgnorar) continue;
 
     if (t.tutorId === tutor.id && haySuperposicion(horaInicio, horaFin, t.horaInicio, t.horaFin)) {
@@ -376,9 +347,6 @@ function verificarDisponibilidad(tutor, fecha, horaInicio, horaFin, turnoIdIgnor
 }
 
 // ── LISTAR TURNOS ─────────────────────────────────────────────────────────────
-
-// Parámetros de query: fecha, fechaDesde, fechaHoy, fechaAnteriores, estado, tutorId,
-// especialidad, estudianteId, estudiante, modalidad, page, limit, sortBy, order
 function listarTurnos({ fecha, fechaDesde, fechaHoy, fechaAnteriores, estado, tutorId, especialidad, estudianteId, estudiante, modalidad,
                         page = 1, limit = 10, sortBy = 'fecha', order = 'asc' } = {}, usuario) {
   aplicarTransicionesAutomaticas();
@@ -487,7 +455,6 @@ function listarTurnos({ fecha, fechaDesde, fechaHoy, fechaAnteriores, estado, tu
   }
 
   if (especialidad) {
-    // Primero obtenemos los ids de tutores con esa especialidad
     const idsConEspecialidad = [];
     for (let i = 0; i < tutores.length; i++) {
       if (tutores[i].especialidad === especialidad) {
@@ -521,7 +488,6 @@ function listarTurnos({ fecha, fechaDesde, fechaHoy, fechaAnteriores, estado, tu
         break;
       }
     }
-    // Agregamos los campos extra sin modificar el original
     turnos[i] = { ...turnos[i], tutorNombre, tutorEspecialidad: tutorEsp, tutorUsuarioId, estudianteNombre };
   }
 
@@ -607,7 +573,6 @@ function obtenerTurnoPorId(id, usuario) {
     }
   }
 
-  // Enriquecemos con el nombre del tutor y del estudiante
   const tutores  = db.findAll('tutores');
   const usuarios = db.findAll('usuarios');
 
@@ -817,9 +782,6 @@ function editarTurno(turnoId, datos, usuarioId, usuarioRol) {
 }
 
 // ── CANCELAR TURNO ────────────────────────────────────────────────────────────
-// Máquina de estados: solicitado ↓ cancelado
-//                    confirmado  ↓ cancelado
-
 function cancelarTurno(turnoId, usuarioId, usuarioRol, observaciones) {
   aplicarTransicionesAutomaticas();
 
@@ -866,8 +828,6 @@ function cancelarTurno(turnoId, usuarioId, usuarioRol, observaciones) {
 }
 
 // ── CONFIRMAR TURNO ───────────────────────────────────────────────────────────
-// Máquina de estados: solicitado → confirmado
-// Solo el tutor ASIGNADO o un admin pueden confirmar.
 
 function confirmarTurno(turnoId, usuarioId, usuarioRol) {
   aplicarTransicionesAutomaticas();
@@ -902,8 +862,6 @@ function confirmarTurno(turnoId, usuarioId, usuarioRol) {
 }
 
 // ── REALIZAR TURNO ────────────────────────────────────────────────────────────
-// Máquina de estados: confirmado → realizado
-// Solo el tutor ASIGNADO o un admin pueden marcar como realizado.
 
 function realizarTurno(turnoId, observaciones, usuarioId, usuarioRol) {
   aplicarTransicionesAutomaticas();
@@ -987,7 +945,6 @@ function obtenerHistorial(turnoId, usuario) {
       let usuarioRol = 'desconocido';
       const uid = todosHistoriales[i].usuarioId;
 
-      // uid puede ser un número (caso normal) o un objeto JWT completo (dato histórico corrupto)
       if (uid && typeof uid === 'object' && uid.nombre) {
         usuarioNombre = uid.nombre;
         usuarioRol = uid.rol || 'desconocido';

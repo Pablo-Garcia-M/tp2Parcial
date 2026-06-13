@@ -4,23 +4,14 @@
 const express = require('express');
 const router = express.Router();
 const turnosController = require('../controllers/turnos.controller');
-// El auth.middleware exporta la función directamente (sin objeto), entonces importamos así:
 const verificarToken = require('../middlewares/auth.middleware');
 const autorizar = require('../middlewares/authorize.middleware');
 const { validarBody } = require('../middlewares/validate.middleware');
-
-// IMPORTANTE: el orden importa en Express.
-// La ruta '/resumen' DEBE ir ANTES de '/:id'.
-// Si no, Express interpretaría la palabra "resumen" como un id.
-// Ejemplo sin orden correcto:
-//   GET /api/turnos/resumen → Express pensaría que id = "resumen" ← MAL
 
 // GET /api/turnos — lista con filtros (cualquier usuario autenticado)
 router.get('/', verificarToken, turnosController.listar);
 
 // GET /api/turnos/resumen — solo admin
-// verificarToken verifica que haya JWT válido
-// autorizar('admin') verifica que el rol sea admin
 router.get('/resumen', verificarToken, autorizar('admin'), turnosController.resumen);
 
 // GET /api/turnos/:id/historial — historial de cambios

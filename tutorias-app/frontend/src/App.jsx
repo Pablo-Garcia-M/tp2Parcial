@@ -1,15 +1,3 @@
-// src/App.jsx
-// Componente raíz de la aplicación.
-// Configura React Router (sistema de navegación entre páginas) y el AuthContext.
-//
-// ¿Cómo funciona React Router?
-// BrowserRouter: habilita la navegación con URLs reales (no #/hash)
-// Routes:        contenedor de todas las rutas
-// Route:         mapea una URL a un componente
-//   path="/"     → URL raíz (http://localhost:5173/)
-//   path="/login"→ http://localhost:5173/login
-//   path="*"     → cualquier URL que no matcheó nada → página 404
-
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import PrivateRoute from './components/PrivateRoute'
@@ -28,24 +16,13 @@ import NotFound from './pages/NotFound'
 
 export default function App() {
   return (
-    // AuthProvider envuelve TODO para que cualquier componente pueda usar useAuth()
     <AuthProvider>
-      {/* BrowserRouter habilita el routing basado en URL del navegador */}
       <BrowserRouter>
-        {/* Navbar siempre visible en todas las páginas */}
         <Navbar />
-
-        {/* Routes: solo renderiza el primer Route que coincide con la URL actual */}
         <Routes>
-
-          {/* Ruta raíz → redirige a /turnos si está logueado, a /login si no */}
           <Route path="/" element={<Navigate to="/login" replace />} />
-
-          {/* Rutas públicas (no necesitan login) */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-
-          {/* Rutas protegidas — cualquier usuario logueado */}
           <Route
             path="/turnos"
             element={
@@ -54,8 +31,6 @@ export default function App() {
               </PrivateRoute>
             }
           />
-
-          {/* Ruta para crear un nuevo turno — estudiantes y admins */}
           <Route
             path="/turnos/nuevo"
             element={
@@ -64,8 +39,6 @@ export default function App() {
               </PrivateRoute>
             }
           />
-
-          {/* Detalle de un turno — cualquier usuario logueado */}
           <Route
             path="/turnos/:id"
             element={
@@ -74,8 +47,6 @@ export default function App() {
               </PrivateRoute>
             }
           />
-
-          {/* Editar un turno — solo admin */}
           <Route
             path="/turnos/:id/editar"
             element={
@@ -85,7 +56,6 @@ export default function App() {
             }
           />
 
-          {/* Panel de admin — solo admin */}
           <Route
             path="/resumen"
             element={
@@ -111,8 +81,6 @@ export default function App() {
             }
           />
 
-          {/* Wildcard: cualquier URL que no matcheó nada → 404 */}
-          {/* DEBE IR AL FINAL porque React Router para en el primer match */}
           <Route path="*" element={<NotFound />} />
 
         </Routes>

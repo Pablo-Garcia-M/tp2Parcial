@@ -10,11 +10,9 @@ const verificarToken = require('../middlewares/auth.middleware');
 router.get('/', verificarToken, tutoresController.listar);
 
 // GET /api/tutores/:id → detalle de un tutor
-// ':id' es un parámetro dinámico — Express lo pone en req.params.id
 router.get('/:id/agenda', verificarToken, tutoresController.agenda);
 
 // GET /api/tutores/:id → detalle de un tutor
-// ':id' es un parámetro dinámico — Express lo pone en req.params.id
 router.get('/:id', verificarToken, tutoresController.obtener);
 
 module.exports = router;

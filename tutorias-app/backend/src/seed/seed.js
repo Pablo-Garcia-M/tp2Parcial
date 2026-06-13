@@ -1,9 +1,3 @@
-// seed.js - Datos semilla para el sistema de tutorías
-// Crea los usuarios, tutores, turnos e historial iniciales
-// para poder probar el sistema sin cargar datos a mano.
-//
-// Cómo ejecutar: npm run seed  (desde la carpeta backend/)
-
 require('dotenv').config();
 
 const bcrypt  = require('bcryptjs');
@@ -11,15 +5,11 @@ const db      = require('../config/database');
 
 function seed() {
   console.log('🌱 Cargando datos semilla...\n');
-
-  // Limpiamos las tablas en orden (de más dependiente a menos)
   db.clear('historial_turnos');
   db.clear('turnos');
   db.clear('tutores');
   db.clear('usuarios');
 
-  // bcryptjs: hashSync(password, saltRounds)
-  // saltRounds=10 significa que el algoritmo hace 2^10 iteraciones (balance seguridad/velocidad)
   const hash = (pwd) => bcrypt.hashSync(pwd, 10);
 
   // ════════════════════════════════════════════
@@ -30,7 +20,7 @@ function seed() {
   const admin = db.insert('usuarios', {
     nombre: 'Admin Sistema', email: 'admin@dds.com',
     passwordHash: hash('admin123'), rol: 'admin', activo: true
-  }); // id: 1
+  });
 
   // Usuarios tutores (tienen rol 'tutor' en la tabla usuarios)
   const uMarina  = db.insert('usuarios', { nombre: 'Marina López',    email: 'marina@dds.com',  passwordHash: hash('tutor123'), rol: 'tutor', activo: true });
@@ -46,8 +36,6 @@ function seed() {
 
   // ════════════════════════════════════════════
   //  TUTORES
-  // diasDisponibles: array con los días de la semana en minúsculas y sin tildes
-  //   Días posibles: lunes, martes, miercoles, jueves, viernes, sabado, domingo
   // ════════════════════════════════════════════
 
   const tMarina = db.insert('tutores', {

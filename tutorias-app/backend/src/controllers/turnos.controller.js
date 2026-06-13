@@ -1,20 +1,10 @@
-// turnos.controller.js
-// Maneja todas las rutas de /api/turnos
-// Recibe la request, delega al service, devuelve JSON
-
 const turnosService = require('../services/turnos.service');
 
 // GET /api/turnos
-// Lista turnos con filtros opcionales por query params
-// Ej: /api/turnos?estado=confirmado&fecha=2026-06-10
 async function listar(req, res, next) {
   try {
-    // req.query trae los parámetros de la URL después del "?"
-    // Ejemplo: ?fecha=2026-06-10&estado=solicitado&page=1&limit=10
     const filtros = req.query;
 
-    // req.user viene del middleware verificarToken (lo puso el JWT en req)
-    // El service usa req.user para filtrar según el rol
     const resultado = await turnosService.listarTurnos(filtros, req.user);
     res.status(200).json(resultado);
   } catch (err) {
@@ -58,14 +48,9 @@ async function historial(req, res, next) {
 }
 
 // POST /api/turnos
-// Crea un nuevo turno
-// Solo pueden crear turnos los estudiantes y admins
 async function crear(req, res, next) {
   try {
-    // req.body tiene los datos del turno: tutorId, fecha, horaInicio, horaFin, tema, modalidad
-    // req.user.id es el estudiante que hace la solicitud (del JWT)
     const turno = await turnosService.crearTurno(req.body, req.user);
-    // 201 = Created
     res.status(201).json(turno);
   } catch (err) {
     next(err);

@@ -1,6 +1,3 @@
-// src/pages/ResumenAdmin.jsx
-// Panel de estadisticas para administradores.
-
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import turnosService from '../services/turnosService'

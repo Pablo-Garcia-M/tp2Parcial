@@ -1,9 +1,3 @@
-// auth.service.js - Lógica de negocio para autenticación
-//
-// Los servicios contienen la lógica de negocio "pura".
-// No saben nada de HTTP (req/res), solo reciben datos y devuelven resultados.
-// Si algo falla, lanzan un Error con un campo .status.
-
 const bcrypt = require('bcryptjs');
 const jwt    = require('jsonwebtoken');
 const db     = require('../config/database');
@@ -49,9 +43,6 @@ function registrar({ nombre, email, password }) {
   }
 
   // 4. Hashear la contraseña
-  //    bcrypt.hashSync(password, 10): el 10 es el "cost factor"
-  //    Más alto = más lento pero más seguro. 10 es el estándar recomendado.
-  //    NUNCA guardamos la contraseña en texto plano.
   const passwordHash = bcrypt.hashSync(password, 10);
 
   // 5. Insertar usuario en la base de datos
@@ -88,24 +79,18 @@ function login({ email, password }) {
     }
   }
 
-  // Usamos el mismo mensaje para email y contraseña incorrectos.
-  // Así no le damos información al atacante sobre si el email existe.
   if (!usuario) {
     const err = new Error('Email o contraseña incorrectos');
     err.status = 401;
     throw err;
   }
 
-  // 2. Verificar que el usuario esté activo
   if (!usuario.activo) {
     const err = new Error('Usuario inactivo. Contactá al administrador.');
     err.status = 401;
     throw err;
   }
 
-  // 3. Comparar contraseña con el hash guardado
-  //    bcrypt.compareSync toma la contraseña en texto plano y el hash,
-  //    y devuelve true si coinciden.
   const passwordValida = bcrypt.compareSync(password, usuario.passwordHash);
   if (!passwordValida) {
     const err = new Error('Email o contraseña incorrectos');
@@ -113,19 +98,12 @@ function login({ email, password }) {
     throw err;
   }
 
-  // 4. Crear el JWT
-  //    El payload es lo que se codifica dentro del token.
-  //    IMPORTANTE: NO incluir contraseña ni datos sensibles.
   const payload = {
     id: usuario.id,
     nombre: usuario.nombre,
     rol: usuario.rol
   };
 
-  // jwt.sign(payload, secret, options)
-  //   - payload: los datos que queremos codificar
-  //   - secret:  clave secreta para firmar (guardada en .env)
-  //   - expiresIn: cuánto dura el token
   const token = jwt.sign(
     payload,
     process.env.JWT_SECRET,

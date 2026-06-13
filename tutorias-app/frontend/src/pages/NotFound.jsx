@@ -1,6 +1,3 @@
-// src/pages/NotFound.jsx
-// Pagina 404.
-
 import { Link } from 'react-router-dom'
 
 export default function NotFound() {

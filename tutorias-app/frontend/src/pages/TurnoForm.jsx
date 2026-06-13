@@ -1,6 +1,3 @@
-// src/pages/TurnoForm.jsx
-// Sirve tanto para crear (POST) como para editar (PUT) un turno.
-
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import turnosService from '../services/turnosService'

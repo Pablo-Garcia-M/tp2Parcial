@@ -1,6 +1,3 @@
-// src/components/PrivateRoute.jsx
-// Componente que protege rutas.
-
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 

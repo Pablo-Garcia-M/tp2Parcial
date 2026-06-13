@@ -1,5 +1,3 @@
-// tutores.service.js - Lógica de negocio para tutores
-
 const db = require('../config/database');
 
 const DIAS_SEMANA = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
@@ -30,7 +28,6 @@ function haySuperposicion(ini1, fin1, ini2, fin2) {
 }
 
 function listarTutores() {
-  // Devolvemos solo los tutores activos
   const todos = db.findAll('tutores');
   const activos = [];
 

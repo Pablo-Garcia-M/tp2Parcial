@@ -1,12 +1,10 @@
-// src/services/turnosService.js
 import api from './api'
 
 // GET /api/turnos con filtros opcionales
 // filtros puede tener: { fecha, estado, tutorId, especialidad, page, limit }
 async function listar(filtros = {}) {
-  // params: convierte el objeto en query string: ?fecha=2026-06-10&estado=confirmado
   const response = await api.get('/turnos', { params: filtros })
-  return response.data // { data: [...], pagination: { page, limit, total, totalPages } }
+  return response.data 
 }
 
 // GET /api/turnos/resumen — solo admin

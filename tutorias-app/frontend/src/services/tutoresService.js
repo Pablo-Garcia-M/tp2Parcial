@@ -1,4 +1,3 @@
-// src/services/tutoresService.js
 import api from './api'
 
 // GET /api/tutores — lista todos los tutores activos

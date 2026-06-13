@@ -1,14 +1,9 @@
-// src/pages/TurnoDetalle.jsx
-// Muestra el detalle completo de un turno y permite realizar acciones
-
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import turnosService from '../services/turnosService'
 
 export default function TurnoDetalle() {
-  // useParams() extrae los parámetros de la URL
-  // En la ruta /turnos/:id, si la URL es /turnos/5, entonces params.id = "5"
   const { id } = useParams()
   const navigate = useNavigate()
   const { usuario } = useAuth()
@@ -22,7 +17,6 @@ export default function TurnoDetalle() {
   const [mostrarHistorial, setMostrarHistorial] = useState(false)
   const [historialError, setHistorialError] = useState('')
 
-  // Cargamos el turno cuando el componente se monta (o cuando cambia el id)
   useEffect(() => {
     cargarTurno()
   }, [id])
@@ -51,7 +45,6 @@ export default function TurnoDetalle() {
     }
   }
 
-  // Función genérica para ejecutar acciones de cambio de estado
   async function ejecutarAccion(accion) {
     setAccionCargando(true)
     try {
@@ -71,7 +64,7 @@ export default function TurnoDetalle() {
         }
         data = await turnosService.cancelar(parseInt(id), motivo.trim())
       }
-      setTurno(data)  // Actualizamos el estado local con el nuevo turno
+      setTurno(data)  
     } catch (err) {
       setError(err.response?.data?.error || `Error al ${accion} el turno`)
     } finally {
@@ -79,7 +72,6 @@ export default function TurnoDetalle() {
     }
   }
 
-  // ¿Puede este usuario confirmar este turno?
   function puedeConfirmar() {
     if (turno?.estado !== 'solicitado') return false
     if (usuario?.rol === 'admin') return true
@@ -92,7 +84,6 @@ export default function TurnoDetalle() {
     return usuario?.rol === 'estudiante' && turno?.estudianteId === usuario?.id
   }
 
-  // Determinamos si el usuario puede editar
   function puedeEditar() {
     return usuario?.rol === 'admin' && turno?.estado !== 'realizado' && turno?.estado !== 'cancelado'
   }

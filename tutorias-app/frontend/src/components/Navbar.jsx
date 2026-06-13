@@ -1,6 +1,3 @@
-// src/components/Navbar.jsx
-// Barra de navegacion siempre visible arriba.
-
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 

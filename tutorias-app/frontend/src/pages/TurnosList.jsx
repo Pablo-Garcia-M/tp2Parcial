@@ -1,6 +1,3 @@
-// src/pages/TurnosList.jsx
-// Lista turnos con filtros y paginacion.
-
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
